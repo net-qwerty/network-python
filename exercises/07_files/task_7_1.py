@@ -14,3 +14,14 @@ Outbound Interface    FastEthernet0/0
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+file = open('/home/sadm/files/cource/network-python/exercises/07_files/ospf.txt', 'r')
+template = '''Prefix                {prefix}
+AD/Metric             {admet}
+Next-Hop              {hop}
+Last update           {update}
+Outbound Interface    {outint}'''
+text=file.read().rstrip().split('\n')
+for route in text:
+    routelist=route.split()
+    print(template.format(prefix=routelist[1], admet=routelist[2].strip('[]'), hop=routelist[4].rstrip(','), update=routelist[5].rstrip(','), outint=routelist[6]))
+        

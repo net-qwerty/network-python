@@ -49,3 +49,24 @@ bin_ip = "00001010000000010000000111000011"
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+ipmask=input("Введите ip адресс сети в формате 10.1.1.0/24: ")
+ip=ipmask.split('/')[0].split('.')
+
+mask=ipmask.split('/')[-1]
+maskb="1"*int(mask)+"0"*(32-int(mask))
+masklist=[maskb[0:8],maskb[8:16],maskb[16:24],maskb[24:32]]
+
+ip = "{:08b}{:08b}{:08b}{:08b}".format(int(ip[0]),int(ip[1]),int(ip[2]),int(ip[3]))
+ip=ip[0:int(mask)]
+ip=ip + "0" * (32-int(mask))
+iplist = [ ip[0:8],ip[8:16],ip[16:24],ip[24:32]]
+print(ip)
+print(len(ip))
+
+
+print("Network:\n{:<8}  {:<8}  {:<8}  {:<8}".format(int(iplist[0],2),int(iplist[1],2),int(iplist[2],2),int(iplist[3],2)))
+print("{}  {}  {}  {}\n".format(iplist[0],iplist[1],iplist[2],iplist[3]))
+
+
+print("Mask:\n/"+mask+"\n{:<8}  {:<8}  {:<8}  {:<8}".format(int(masklist[0],2),int(masklist[1],2),int(masklist[2],2),int(masklist[3],2)))
+print("{}  {}  {}  {}".format(masklist[0],masklist[1],masklist[2],masklist[3]))

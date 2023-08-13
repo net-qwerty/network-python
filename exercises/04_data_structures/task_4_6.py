@@ -28,3 +28,13 @@ Next-Hop              {}
 Last update           {}
 Outbound Interface    {}
 """
+
+getstring=ospf_route.split()
+routedata={'prefix' : getstring[0], 
+           'admetric' : getstring[1].strip('[]'), 
+           'nexthop' : getstring[3].rstrip(','), 
+           'update' : getstring[4].rstrip(','), 
+           'outint' : getstring[5]}
+
+
+print(template.format(routedata.get('prefix'),routedata.get('admetric'),routedata.get('nexthop'),routedata.get('update'),routedata.get('outint'),))

@@ -46,3 +46,6 @@ london_co = {
         "routing": True,
     },
 }
+
+namedevice=input("Введите имя устройства: ")
+print(london_co[namedevice])

@@ -12,3 +12,15 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+ip=input("Введите ip адрессв формате 10.0.1.1:")
+checkip=ip.split('.')
+if int(checkip[0]) <= 223 and int(checkip[0]) != 0:
+   print("unicast")
+elif int(checkip[0]) > 223 and int(checkip[0]) <= 239:
+   print("multicast")
+elif ip == "255.255.255.255":
+   print("local broadcast")
+elif ip == "0.0.0.0":
+   print("unassigned")
+else:
+   print("unused")

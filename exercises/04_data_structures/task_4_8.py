@@ -26,3 +26,8 @@
 """
 
 ip = "192.168.3.1"
+tamplate = "{} {} {}"
+ip=ip.split('.')
+print("{:<8}  {:<8}  {:<8}  {:<8}".format(ip[0],ip[1],ip[2],ip[3]))
+print("{0:08b}  {1:08b}  {2:08b}  {3:08b}".format(int(ip[0]),int(ip[1]),int(ip[2]),int(ip[3])))
+

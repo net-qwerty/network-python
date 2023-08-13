@@ -20,3 +20,12 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+
+ignore = ["duplex", "alias", "configuration"]
+file = open("/home/sadm/files/cource/network-python/exercises/07_files/CAM_table.txt",'r')
+text=file.read().rstrip().split('\n')
+tamplate="{vlan:<8} {mac:<19} {int}"
+for string in text:
+    stringl=string.split()
+    if string != "" and stringl[0].isdigit() and stringl[2].isalpha():
+        print(tamplate.format(vlan=stringl[0],mac=stringl[1],int=stringl[3]))
