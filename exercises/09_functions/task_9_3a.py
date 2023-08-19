@@ -25,3 +25,33 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+
+
+def get_int_vlan_map(config_filename):
+    conf_trunk={}
+    conf_acces={}
+    defvl=0
+    with open(config_filename) as text:
+        for i, command in enumerate(text, 1):
+            command=command.rstrip()
+            if command.startswith('!'):
+                continue
+            elif command.startswith('interface'):
+                inter=command.split()[-1]
+                defvl=i+2
+            elif defvl == i and "duplex" in  command:
+                conf_acces[inter]=1
+            elif "trunk allowed" in command:
+                vlanstr=command.split()[-1].split(",")
+                vlanint=[]
+                for val in vlanstr:
+                    vlanint.append(int(val))
+                conf_trunk[inter]=vlanint
+            elif "access vlan" in command:
+                vlan=int(command.split()[-1])
+                conf_acces[inter]=vlan
+
+        return (conf_acces,conf_trunk)
+
+
+print(get_int_vlan_map("/home/sadm/files/cource/network-python/exercises/09_functions/config_sw2.txt"))

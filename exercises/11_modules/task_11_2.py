@@ -28,9 +28,22 @@ Cгенерировать топологию, которая соответст�
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+#sfsdfsfdsf
+from task_11_1 import parse_cdp_neighbors
 infiles = [
     "sh_cdp_n_sw1.txt",
     "sh_cdp_n_r1.txt",
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+
+
+def create_network_map(filenames):
+    map={}
+    for file in filenames:
+        with open(file) as config:
+            map.update(parse_cdp_neighbors(config.read()))
+    return map
+
+if __name__ == "__main__":
+    print(create_network_map(infiles))

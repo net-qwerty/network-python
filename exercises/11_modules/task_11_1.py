@@ -43,6 +43,20 @@ def parse_cdp_neighbors(command_output):
     и с файлами и с выводом с оборудования.
     Плюс учимся работать с таким выводом.
     """
+    commandlist = command_output.split("\n")
+    config={}
+    for command in commandlist:
+        command = command.strip()
+        item = command.split()
+        if ">" in command:
+            device=item[0].split(">")[0]
+        elif len(item) >= 6 and item[3].isdigit():
+            intrl=item[1] + item[2]
+            intrr=item[-2] + item[-1]
+            config[(device, intrl)]=(item[0], intrr)
+            
+    return config
+    
 
 
 if __name__ == "__main__":

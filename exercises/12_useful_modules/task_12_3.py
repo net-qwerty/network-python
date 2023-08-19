@@ -18,3 +18,18 @@ Reachable    Unreachable
              10.1.1.9
 
 """
+
+from tabulate import tabulate
+from task_12_1 import ping_ip_addresses
+from task_12_2 import convert_ranges_to_ip_list
+
+def print_ip_table(ip_reachable, ip_unreachable):
+    columns = ['Reachable', 'Unreachable']
+    table={'Reachable': ip_reachable, 'Unreachable' : ip_unreachable}
+
+    print(tabulate(table, headers="keys"))
+
+ip = ["10.0.0.55-10.0.0.57", "99.99.99.99", "8.8.8.8", "8.8.4.4"]
+ready_ip=ping_ip_addresses(convert_ranges_to_ip_list(ip))
+print_ip_table(ready_ip[0],ready_ip[1])
+

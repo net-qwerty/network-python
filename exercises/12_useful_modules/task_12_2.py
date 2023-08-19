@@ -34,3 +34,36 @@
  '172.21.41.129', '172.21.41.130', '172.21.41.131', '172.21.41.132']
 
 """
+import ipaddress
+from task_12_1 import ping_ip_addresses
+
+def convert_ranges_to_ip_list(ip_list):
+    ip_listr=[]
+    for ip in ip_list:
+        if "-" in ip:
+            range=ip.split("-")
+            i=0
+            if len(range[-1]) >= 4:
+                result=int(range[1].split(".")[-1])-int(range[0].split(".")[-1])
+                ipn = ipaddress.ip_address(range[0])
+                ip_listr.append(str(ipn))
+                while i < result:
+                    i += 1
+                    ipn += 1
+                    ip_listr.append(str(ipn))
+            elif len(range[-1]) < 4:
+                result=int(range[1])-int(range[0].split(".")[-1])
+                ipn = ipaddress.ip_address(range[0])
+                ip_listr.append(str(ipn))
+                while i < result:
+                    i += 1
+                    ipn += 1
+                    ip_listr.append(str(ipn))
+        else:
+            ip_listr.append(str(ip))
+                    
+    return ip_listr
+
+if __name__ == "__main__":
+    ip = ["192.168.0.5-192.168.0.8", "10.0.0.55-10.0.0.57", "99.99.99.99", "8.8.8.8", "8.8.4.4"]
+    print(ping_ip_addresses(convert_ranges_to_ip_list(ip)))

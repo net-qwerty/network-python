@@ -64,3 +64,28 @@ def ignore_command(command, ignore):
         if word in command:
             ignore_status = True
     return ignore_status
+
+def convert_config_to_dict(config_filename):
+    config={}
+    with open(config_filename) as text:
+        for i, command in enumerate(text, 1):
+            command=command.rstrip()
+            if command.startswith('!'):
+                continue
+            elif ignore_command(command, ignore):
+                continue
+            elif not command:
+                continue
+            elif command[0] != " ":
+                comk=command
+                config.setdefault(comk,[])
+            elif command[0] == " " and command[1] != " ":
+                command=command.strip()
+                config[comk].append(command)
+
+        return config
+
+
+
+
+print(convert_config_to_dict("/home/sadm/files/cource/network-python/exercises/09_functions/config_sw1.txt"))

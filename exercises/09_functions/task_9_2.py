@@ -60,3 +60,27 @@ trunk_config_2 = {
     "FastEthernet0/15": [111, 130],
     "FastEthernet0/14": [117],
 }
+
+def generate_trunk_config(intf_vlan_mapping,trunk_template):
+    '''
+     intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
+        {'FastEthernet0/12':10,
+         'FastEthernet0/14':11,
+         'FastEthernet0/16':17}
+    access_template - список команд для порта в режиме access
+    '''
+    config=[]
+    for valint in intf_vlan_mapping:
+        config.append("interface " + valint)
+        for command in trunk_template: 
+            if command.endswith('allowed vlan'):
+                vlans=[]
+                for vlan in intf_vlan_mapping.get(valint):
+                    vlans.append(str(vlan))
+                config.append(command + " " + ",".join(vlans))
+            else:
+                config.append(command)
+    return config
+
+print(generate_trunk_config(trunk_config,trunk_mode_template))
+print(generate_trunk_config(trunk_config_2,trunk_mode_template))
