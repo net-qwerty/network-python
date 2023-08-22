@@ -24,3 +24,21 @@
 а не ввод пользователя.
 
 """
+import re
+
+def get_ip_from_cfg(config):
+    '''
+    Функция обрабатывает конфигурацию и возвращает IP-адреса и маски,
+    которые настроены на интерфейсах, в виде списка кортежей:
+    * первый элемент кортежа - IP-адрес
+    * второй элемент кортежа - маска
+    '''
+    with open(config) as file:
+        regex=( r"interface (\S+)\n"
+                r"( .*\n)*"
+                r" ip address (\S+) (\S+)")
+        match = re.finditer(regex, file.read())
+        result = {m[1]:(m[3],m[4]) for m in match}
+    return result
+
+print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))

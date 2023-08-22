@@ -23,3 +23,23 @@
 а не ввод пользователя.
 
 """
+import re
+
+def get_ip_from_cfg(config):
+    '''
+    Функция обрабатывает конфигурацию и возвращает IP-адреса и маски,
+    которые настроены на интерфейсах, в виде списка кортежей:
+    * первый элемент кортежа - IP-адрес
+    * второй элемент кортежа - маска
+    '''
+    template = r"ip address (\S+) (\S+)"
+    listip=[]
+    with open(config) as file:
+        for stringc in file:
+            match=re.search(template, stringc)
+            if match:
+                listip.append(match.groups())
+    return listip
+
+
+print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))

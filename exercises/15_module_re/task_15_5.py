@@ -26,3 +26,22 @@ description Connected to SW1 port Eth 0/1
 
 Проверить работу функции на файле sh_cdp_n_sw1.txt.
 """
+import re
+
+def generate_description_from_cdp(config):
+    result={}
+    template="description Connected to {dev} port {int}"
+    regax=( r"(?P<device>\w+)  +(?P<intl>\S+ \d+.\d+)" 
+            r"  +\d+  +[\w ]+  +\d+ +(?P<intr>\S+ \d+.\d+)" )
+    with open(config) as file:
+        match=re.finditer(regax,file.read())
+#        print(match.groups())
+        # for m in match:
+        #     print(m['intr'])
+#             result[m['intl']] = template.format(dev=m['device'],int=m['intr'])
+        result={m['intl']: template.format(dev=m['device'],int=m['intr']) for m in match}
+    return result
+
+
+
+print(generate_description_from_cdp("/home/sadm/files/cource/network-python/exercises/15_module_re/sh_cdp_n_sw1.txt"))

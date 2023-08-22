@@ -24,3 +24,17 @@ interface Loopback0
 
 Проверить работу функции на примере файла config_r1.txt.
 """
+import re
+
+def get_ints_without_description(configfile):
+    regex=( r"!\ninterface\s+(?P<intr>\S+)\n"
+            r"(?P<descr>\sdescription)?")
+    result = []
+    print("hello")
+    with open(configfile) as file:  
+        for match in re.finditer(regex, file.read()):
+            if match.lastgroup == 'intr':
+                result.append(match['intr'])
+    return result
+
+print(get_ints_without_description("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))

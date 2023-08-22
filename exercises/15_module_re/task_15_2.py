@@ -21,3 +21,14 @@
 Проверить работу функции на примере файла sh_ip_int_br.txt.
 
 """
+
+import re
+
+def parse_sh_ip_int_br(config):
+    regx = r"(\S+) +(\S+) +\w+ \w+ +(administratively down|up|down) +(up|down)"
+    with open(config) as file:
+        match=re.finditer(regx,file.read())
+        result=[m.groups() for m in match]
+    return result
+
+print(parse_sh_ip_int_br("/home/sadm/files/cource/network-python/exercises/15_module_re/sh_ip_int_br.txt"))

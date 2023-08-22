@@ -32,3 +32,18 @@ object network LOCAL_10.1.9.5
 
 Во всех правилах для ASA интерфейсы будут одинаковыми (inside,outside).
 """
+import re 
+
+def convert_ios_nat_to_asa(cofigCisco, configASA):
+    tamplate=("\nobject network LOCAL_{ip}\n"
+      " host {ip}\n" 
+      " nat (inside,outside) static interface service tcp {src} {dst}")
+    regex=r"ip.+\s(?P<ip>(?:[0-9]+\.)+[0-9]+)\s(?P<srcp>\d+).+\s(?P<dstp>\d+)"
+    with open(cofigCisco, 'r') as srcfile,open(configASA, 'w') as destfile:
+        match=re.finditer(regex,srcfile.read())
+        for line in match:
+            lineasa=tamplate.format(ip=line['ip'], src=line['srcp'], dst=line['dstp'])
+            destfile.write(lineasa)
+    destfile.close()
+
+convert_ios_nat_to_asa('/home/sadm/files/cource/network-python/exercises/15_module_re/cisco_nat_config.txt', "newconf.txt")

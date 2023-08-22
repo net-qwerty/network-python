@@ -28,3 +28,27 @@ IP-адреса, диапазоны адресов и так далее, так 
 а не ввод пользователя.
 
 """
+import re
+
+def get_ip_from_cfg(config):
+    '''
+    Функция обрабатывает конфигурацию и возвращает IP-адреса и маски,
+    которые настроены на интерфейсах, в виде списка кортежей:
+    * первый элемент кортежа - IP-адрес
+    * второй элемент кортежа - маска
+    '''
+    regex=( r"^interface (?P<intr>\S+)\n"
+            r"|ip address (?P<ip>\S+) (?P<mask>\S+)")
+    result={}
+    with open(config) as file:
+        for line in file:
+            match = re.search(regex,line)
+            if match:
+                if match.lastgroup == "intr":
+                    interface=match.group("intr")
+                elif match.lastgroup == "mask":
+                    result.setdefault(interface,[])
+                    result[interface].append((match.group("ip"), match.group("mask")))
+    return result
+
+print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r2.txt"))
