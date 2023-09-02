@@ -28,3 +28,5 @@ if __name__ == "__main__":
 
     for dev in devices:
         print(send_show_command(dev, command))
+
+

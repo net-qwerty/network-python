@@ -24,3 +24,21 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Проверить работу функции на содержимом файла sh_cdp_n_sw1.txt
 """
+import re
+from pprint import pprint
+
+def parse_sh_cdp_neighbors(text):
+    conf={}
+    rdevice=r"(?P<device>\S+)>"
+    regax=(r"(?P<rdevice>\S+) + (?P<localint>\S+ \d+.\d+) +\d+ +.+ +\S+ +(?P<idport>\S+ \d+.\d+)")
+    device=re.search(rdevice, text).group('device')
+    conf[device]={}
+#    conf.setdefault(device)
+    match=re.finditer(regax,text)
+    for m in match:
+        conf[device][m.group('localint')]={m.group('rdevice'):m.group('idport')}
+    return conf
+
+if __name__ == "__main__":
+    with open("sh_cdp_n_sw1.txt", 'r') as f:
+        pprint(parse_sh_cdp_neighbors(f.read()))

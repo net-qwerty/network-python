@@ -44,8 +44,27 @@
 """
 
 import glob
+import re
+import csv
+
+def parse_sh_version(text):
+    rversion=r"Version (?P<version>\S+),"
+    rfile=r"System image file is .(?P<fl>\S+)."
+    ruptime=r"uptime is (?P<uptime>\d+ \w+, \d+ \w+, \d+ \w+)"
+    return (re.search(rversion, text).group('version'), 
+           re.search(rfile, text).group('fl'), 
+           re.search(ruptime, text).group('uptime'))
+
+def write_inventory_to_csv(data_filenames, csv_filename):
+    with open(csv_filename, 'w') as csvf:
+        writer = csv.writer(csvf)
+        writer.writerow(["hostname", "ios", "image", "uptime"])
+        for file in data_filenames:
+            with open(file, "r") as text:
+                devicename=file.split("_")[-1].split(".")[0]
+                writer.writerow((devicename,)+ parse_sh_version(text.read()))
 
 sh_version_files = glob.glob("sh_vers*")
-# print(sh_version_files)
 
-headers = ["hostname", "ios", "image", "uptime"]
+write_inventory_to_csv(sh_version_files, "csvios")
+#headers = ["hostname", "ios", "image", "uptime"]
