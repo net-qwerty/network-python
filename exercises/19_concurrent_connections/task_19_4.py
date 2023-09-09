@@ -105,3 +105,50 @@ R3#
 
 Для выполнения задания можно создавать любые дополнительные функции.
 """
+import yaml
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from netmiko import ConnectHandler
+
+
+def send_show_command(device, command):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_command(command)
+        prompt = ssh.find_prompt()
+    return f"{prompt}{command}\n{result}\n"
+
+
+def send_config_commands(device, config_commands):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_config_set(config_commands)
+    return result+"\n"
+
+def send_commands_to_devices(devices,filename,*,config=None, show=None,limit=3):
+    if show and config:
+        raise ValueError("Можно передавать только один из аргументов show/config")
+    elif show:
+        command=show
+        func=send_show_command
+    elif config:
+        command=config
+        func=send_config_commands
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        futures_ssh = []
+        for device in devices:
+            futures=executor.submit(func, device, command)
+            futures_ssh.append(futures)
+    with open(filename,'w') as file:
+        for res in as_completed(futures_ssh):
+            file.write(res.result())
+
+if __name__ == "__main__":
+    command = "sh ip int br"
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+    
+    commands = ['router ospf 55', 'network 0.0.0.0 255.255.255.255 area 0']
+    send_commands_to_devices(devices, 'result.txt', config=commands)
+
+
+

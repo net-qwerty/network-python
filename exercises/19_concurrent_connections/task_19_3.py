@@ -39,11 +39,37 @@ router ospf 1
 
 Проверить работу функции на устройствах из файла devices.yaml и словаре commands
 """
+import yaml
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from itertools import repeat
+from netmiko import ConnectHandler
 
+def send_show_command(device, command):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_command(command)
+        prompt = ssh.find_prompt()
+    return f"{prompt}{command}\n{result}\n"
+
+
+def send_command_to_devices(devices,commands_dict,filename,limit):
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        future_ssh = [executor.submit(send_show_command, device, commands_dict[device["host"]]) for device in devices]
+    with open(filename,'w') as file:
+        for res in as_completed(future_ssh):
+            file.write(res.result())
+
+
+if __name__ == "__main__":
+    command = "sh ip int br"
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
 # Этот словарь нужен только для проверки работа кода, в нем можно менять IP-адреса
 # тест берет адреса из файла devices.yaml
-commands = {
-    "192.168.100.3": "sh run | s ^router ospf",
-    "192.168.100.1": "sh ip int br",
-    "192.168.100.2": "sh int desc",
-}
+    commands = {
+        "192.168.100.3": "sh run | s ^router ospf",
+        "192.168.100.1": "sh ip int br",
+        "192.168.100.2": "sh int desc",
+    }
+
+    send_command_to_devices(devices,commands,"file_show_com.txt",limit=2)

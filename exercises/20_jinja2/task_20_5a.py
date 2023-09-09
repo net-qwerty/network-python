@@ -20,7 +20,7 @@
 Первый элемент кортежа - вывод с первого устройства (строка),
 второй элемент кортежа - вывод со второго устройства.
 
-При этом, в словаре data не указан номер интерфейса Tunnel,
+При этом ,в словаре data не указан номер интерфейса Tunnel,
 который надо использовать.
 Номер надо определить самостоятельно на основе информации с оборудования.
 Если на маршрутизаторе нет интерфейсов Tunnel,
@@ -37,11 +37,55 @@
 интерфейсов, но при этом не проверяет настроенные номера тунелей и другие команды.
 Они должны быть, но тест упрощен, чтобы было больше свободы выполнения.
 """
+import yaml
+from jinja2 import Environment, FileSystemLoader
+from task_20_1 import generate_config
+from task_20_5 import create_vpn_config
+from netmiko import (
+    ConnectHandler,
+    NetmikoTimeoutException,
+    NetmikoAuthenticationException,
+)
+import re
+from pprint import pprint
 
-data = {
-    "tun_num": None,
-    "wan_ip_1": "192.168.100.1",
-    "wan_ip_2": "192.168.100.2",
-    "tun_ip_1": "10.0.1.1 255.255.255.252",
-    "tun_ip_2": "10.0.1.2 255.255.255.252",
-}
+
+def get_tunnel(src, dst):
+    nums = [int(num) for num in re.findall(r"Tunnel(\d+)", src + dst)]
+    if not nums:
+        return 0
+    diff = set(range(min(nums), max(nums) + 1)) - set(nums)
+    if diff:
+        return min(diff)
+    else:
+        return max(nums) + 1
+    
+
+def configure_vpn(src_device_params,dst_device_params,src_template,dst_template,vpn_data_dict):
+    with ConnectHandler(**src_device_params) as src, ConnectHandler(**dst_device_params) as dst:
+        src.enable()
+        dst.enable()
+        tunnels_src = src.send_command("sh run | include ^interface Tunnel")
+        tunnels_dst = dst.send_command("sh run | include ^interface Tunnel")
+        tunnel=get_tunnel(tunnels_src, tunnels_dst)
+        vpn_data_dict['tun_num']=tunnel
+        configs=create_vpn_config(src_template,dst_template,vpn_data_dict)
+        settings_d1 = src.send_config_set(configs[0].split("\n"))
+        settings_d2 = dst.send_config_set(configs[1].split("\n"))
+    return settings_d1,settings_d2
+
+
+
+if __name__ == "__main__":
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f) 
+
+    data = {
+        "tun_num": None,
+        "wan_ip_1": "192.168.100.1",
+        "wan_ip_2": "192.168.100.2",
+        "tun_ip_1": "10.0.1.1 255.255.255.252",
+        "tun_ip_2": "10.0.1.2 255.255.255.252",
+    }
+
+    pprint(configure_vpn(devices[0], devices[1], "templates/gre_ipsec_vpn_1.txt", "templates/gre_ipsec_vpn_2.txt",data ))
