@@ -31,3 +31,45 @@ In [12]: print(ip_list)
 [IPAddress('10.1.1.1/24')]
 
 """
+
+import ipaddress
+
+
+from pprint import pprint
+
+class IPAddress:
+
+    def __init__(self, ipaddress):
+        ip, mask = ipaddress.split("/")
+        self._check_ip(ip)
+        self._check_mask(mask)
+        self.ip, self.mask = ip, int(mask)
+    
+    def __str__(self):
+        return f"IP address {self.ip}/{self.mask}"
+    
+    def __repr__(self):
+        return f"IPAddress('{self.ip}/{self.mask}')"
+
+    def _check_ip(self,ip):
+        octets = ip.split(".")
+        ckeck_octets=[]
+        for octet in octets:
+            if octet.isdigit() and 0 <= int(octet) <= 255:
+                ckeck_octets.append(1)
+        if len(octets) == 4 and len(ckeck_octets) == 4:
+            return True
+        else:
+            raise ValueError("Incorrect IPv4 address")
+        
+    def _check_mask(self,mask):
+        if mask.isdigit() and 8 <= int(mask) <= 32:
+            return True
+        else:
+            raise ValueError("Incorrect mask")
+        
+
+
+if __name__ == "__main__":
+    ip1 = IPAddress('10.33.1.22/22')
+    print(str(ip1))
