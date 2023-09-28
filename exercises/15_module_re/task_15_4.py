@@ -37,4 +37,4 @@ def get_ints_without_description(configfile):
                 result.append(match['intr'])
     return result
 
-print(get_ints_without_description("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))
+print(get_ints_without_description("config_r1.txt"))

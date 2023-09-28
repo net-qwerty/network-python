@@ -44,4 +44,4 @@ def generate_description_from_cdp(config):
 
 
 
-print(generate_description_from_cdp("/home/sadm/files/cource/network-python/exercises/15_module_re/sh_cdp_n_sw1.txt"))
+print(generate_description_from_cdp("sh_cdp_n_sw1.txt"))

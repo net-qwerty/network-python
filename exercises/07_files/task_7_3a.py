@@ -42,7 +42,7 @@
 """
 
 
-file = open("/home/sadm/files/cource/network-python/exercises/07_files/CAM_table.txt",'r')
+file = open("CAM_table.txt",'r')
 text=file.read().rstrip().split('\n')
 tamplate="{vlan:<8} {mac:<19} {int}"
 textsort=[]

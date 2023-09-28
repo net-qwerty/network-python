@@ -51,4 +51,4 @@ def get_ip_from_cfg(config):
                     result[interface].append((match.group("ip"), match.group("mask")))
     return result
 
-print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r2.txt"))
+print(get_ip_from_cfg("config_r2.txt"))

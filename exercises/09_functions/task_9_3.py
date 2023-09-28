@@ -88,4 +88,4 @@ def get_int_vlan_map(config_filename):
         return (conf_acces,conf_trunk)
 
 
-print(get_int_vlan_map("/home/sadm/files/cource/network-python/exercises/09_functions/config_sw1.txt"))
+print(get_int_vlan_map("config_sw1.txt"))

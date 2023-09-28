@@ -31,4 +31,4 @@ def parse_sh_ip_int_br(config):
         result=[m.groups() for m in match]
     return result
 
-print(parse_sh_ip_int_br("/home/sadm/files/cource/network-python/exercises/15_module_re/sh_ip_int_br.txt"))
+print(parse_sh_ip_int_br("sh_ip_int_br.txt"))

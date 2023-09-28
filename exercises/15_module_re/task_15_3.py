@@ -46,4 +46,4 @@ def convert_ios_nat_to_asa(cofigCisco, configASA):
             destfile.write(lineasa)
     destfile.close()
 
-convert_ios_nat_to_asa('/home/sadm/files/cource/network-python/exercises/15_module_re/cisco_nat_config.txt', "newconf.txt")
+convert_ios_nat_to_asa('cisco_nat_config.txt', "newconf.txt")

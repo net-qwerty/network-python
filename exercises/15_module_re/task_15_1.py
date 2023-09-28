@@ -42,4 +42,4 @@ def get_ip_from_cfg(config):
     return listip
 
 
-print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))
+print(get_ip_from_cfg("config_r1.txt"))

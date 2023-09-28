@@ -41,4 +41,4 @@ def get_ip_from_cfg(config):
         result = {m[1]:(m[3],m[4]) for m in match}
     return result
 
-print(get_ip_from_cfg("/home/sadm/files/cource/network-python/exercises/15_module_re/config_r1.txt"))
+print(get_ip_from_cfg("config_r1.txt"))

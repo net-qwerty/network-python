@@ -88,4 +88,4 @@ def convert_config_to_dict(config_filename):
 
 
 
-print(convert_config_to_dict("/home/sadm/files/cource/network-python/exercises/09_functions/config_sw1.txt"))
+print(convert_config_to_dict("config_sw1.txt"))
