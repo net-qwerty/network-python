@@ -60,8 +60,6 @@ ip = "{:08b}{:08b}{:08b}{:08b}".format(int(ip[0]),int(ip[1]),int(ip[2]),int(ip[3
 ip=ip[0:int(mask)]
 ip=ip + "0" * (32-int(mask))
 iplist = [ ip[0:8],ip[8:16],ip[16:24],ip[24:32]]
-print(ip)
-print(len(ip))
 
 
 print("Network:\n{:<8}  {:<8}  {:<8}  {:<8}".format(int(iplist[0],2),int(iplist[1],2),int(iplist[2],2),int(iplist[3],2)))
